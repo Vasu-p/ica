@@ -77,6 +77,7 @@ export function CommunityList({ onShowDetails, ...otherprops }) {
       filterable={true}
       selectionMode={AnalyticalTableSelectionMode.MultiSelect}
       onRowSelect={(e) => setSelectedCommunities(e.detail.selectedFlatRows)}
+      {...otherprops}
     />
   );
 }

@@ -18,14 +18,22 @@ function App() {
   setTheme("sap_horizon");
   const [layout, setLayout] = useState(FCLLayout.OneColumn);
 
-  const showApartmentDetails = useCallback(() => {}, []);
+  const showApartmentDetails = useCallback(() => {
+    setLayout(FCLLayout.TwoColumnsMidExpanded);
+  }, []);
+
+  const handleApartmentListClose = useCallback(() => {
+    setLayout(FCLLayout.OneColumn);
+  }, []);
 
   return (
     <ThemeProvider>
       <ShellBar primaryTitle="Irvine Company Apartments" />
       <FlexibleColumnLayout
         startColumn={<CommunityList onShowDetails={showApartmentDetails} />}
-        midColumn={<ApartmentList communities={[]} />}
+        midColumn={
+          <ApartmentList communities={[]} onClose={handleApartmentListClose} />
+        }
         layout={layout}
       />
     </ThemeProvider>
