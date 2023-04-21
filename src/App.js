@@ -1,9 +1,11 @@
 import { ShellBar, ThemeProvider } from "@ui5/webcomponents-react";
+import { CommunityList } from "./components/CommunityList";
 
 function App() {
   return (
     <ThemeProvider>
-      <ShellBar title="Irvine Company Apartments" />
+      <ShellBar primaryTitle="Irvine Company Apartments" />
+      <CommunityList />
     </ThemeProvider>
   );
 }
