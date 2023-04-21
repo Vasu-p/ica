@@ -1,9 +1,17 @@
-import { AnalyticalTable } from "@ui5/webcomponents-react";
-import React, { useEffect, useMemo, useState } from "react";
+import {
+  AnalyticalTable,
+  AnalyticalTableSelectionMode,
+  Button,
+  Toolbar,
+  ToolbarSpacer,
+} from "@ui5/webcomponents-react";
+
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { getAllCommunities } from "../apis";
 
-export function CommunityList() {
+export function CommunityList({ onShowDetails, ...otherprops }) {
   const [communityList, setCommunityList] = useState([]);
+  const [selectedCommunities, setSelectedCommunities] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
@@ -12,6 +20,10 @@ export function CommunityList() {
     }
     fetchData().then((data) => setCommunityList(data));
   }, []);
+
+  const handleShowDetails = useCallback(() => {
+    onShowDetails(selectedCommunities);
+  }, [onShowDetails, selectedCommunities]);
 
   const columns = useMemo(
     () => [
@@ -52,11 +64,19 @@ export function CommunityList() {
 
   return (
     <AnalyticalTable
+      header={
+        <Toolbar>
+          <ToolbarSpacer />
+          <Button onClick={handleShowDetails}>Show Details</Button>
+        </Toolbar>
+      }
       data={communityList}
       columns={columns}
       groupBy={["city"]}
       groupable={true}
       filterable={true}
+      selectionMode={AnalyticalTableSelectionMode.MultiSelect}
+      onRowSelect={(e) => setSelectedCommunities(e.detail.selectedFlatRows)}
     />
   );
 }
