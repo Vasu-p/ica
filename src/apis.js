@@ -36,7 +36,7 @@ export function getAllAvailableApartments(propertyIds) {
           params: {
             hitsPerPage: 100,
             attributesToHighlight: [],
-            filters: "propertyID:2265072",
+            filters: propertyIdsFilter,
             attributesToRetrieve: [
               "floorplanName",
               "unitMarketingName",
