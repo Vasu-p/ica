@@ -17,8 +17,10 @@ function App() {
   // change theme to horizon
   setTheme("sap_horizon");
   const [layout, setLayout] = useState(FCLLayout.OneColumn);
+  const [communitiesToShowDetails, setCommunitiesToShowDetails] = useState([]);
 
-  const showApartmentDetails = useCallback(() => {
+  const showApartmentDetails = useCallback((selectedCommunities) => {
+    setCommunitiesToShowDetails(selectedCommunities);
     setLayout(FCLLayout.TwoColumnsMidExpanded);
   }, []);
 
@@ -32,7 +34,10 @@ function App() {
       <FlexibleColumnLayout
         startColumn={<CommunityList onShowDetails={showApartmentDetails} />}
         midColumn={
-          <ApartmentList communities={[]} onClose={handleApartmentListClose} />
+          <ApartmentList
+            communities={communitiesToShowDetails}
+            onClose={handleApartmentListClose}
+          />
         }
         layout={layout}
       />
