@@ -76,7 +76,12 @@ export function CommunityList({ onShowDetails, ...otherprops }) {
       groupable={true}
       filterable={true}
       selectionMode={AnalyticalTableSelectionMode.MultiSelect}
-      onRowSelect={(e) => setSelectedCommunities(e.detail.selectedFlatRows)}
+      onRowSelect={(e) => {
+        console.log("selected rowws", e.detail.selectedFlatRows);
+        setSelectedCommunities(
+          e.detail.selectedFlatRows.map((row) => row.original)
+        );
+      }}
       {...otherprops}
     />
   );
