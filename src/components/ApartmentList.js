@@ -3,16 +3,14 @@ import moment from "moment";
 import {
   AnalyticalTable,
   AnalyticalTableScaleWidthMode,
-  Badge,
   Button,
-  FlexBox,
-  FlexBoxDirection,
   Toolbar,
   ToolbarSpacer,
 } from "@ui5/webcomponents-react";
 
 import { getPropertyIdsForCommunities } from "../utils";
 import { getAllAvailableApartments } from "../apis";
+import { TableHeader } from "./../common/TableHeader";
 
 export function ApartmentList({ communities, onClose, ...otherProps }) {
   console.log("apartment list comms", communities);
@@ -22,42 +20,36 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
     () => [
       {
         id: "communityName",
-        Header: "Community Name",
+        Header: <TableHeader text={"Community Name"} />,
         accessor: "communityMarketingName",
       },
       {
         id: "numBedBatch",
-        Header: "Num Bed - Num Bath",
+        Header: <TableHeader text={"Num Bed - Num Bath"} />,
         accessor: (row) => `${row.floorplanBed}-${row.floorplanBath}`,
       },
       {
         id: "floor",
-        Header: "Floor",
+        Header: <TableHeader text={"Floor"} />,
         accessor: "unitFloor",
       },
       {
         id: "area",
-        Header: "Area",
+        Header: <TableHeader text={"Area"} />,
         accessor: "unitSqFt",
       },
       {
         id: "amenities",
-        Header: "Amenities",
+        Header: <TableHeader text={"Amenities"} />,
         accessor: "unitAmenities",
-        minWidth: 200,
-        Cell: ({ cell: { value } }) => {
-          return (
-            <FlexBox direction={FlexBoxDirection.Column}>
-              {value.map((amenity) => (
-                <Badge colorScheme="8">{amenity}</Badge>
-              ))}
-            </FlexBox>
-          );
-        },
+        minWidth: 300,
+        Cell: ({ cell: { value } }) => (
+          <span style={{ textWrap: "balance" }}>{value.join(", ")}</span>
+        ),
       },
       {
         id: "available",
-        Header: "Earliest Available",
+        Header: <TableHeader text={"Earliest Available"} />,
         accessor: (row) =>
           moment
             .unix(row.unitEarliestAvailable.dateTimeStamp)
@@ -65,7 +57,7 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
       },
       {
         id: "price",
-        Header: "Price",
+        Header: <TableHeader text={"Price"} />,
         accessor: "unitEarliestAvailable.price",
       },
     ],
@@ -103,7 +95,7 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
       columns={columns}
       groupable={true}
       filterable={true}
-      rowHeight={70}
+      rowHeight={100}
       scaleWidthMode={AnalyticalTableScaleWidthMode.Smart}
       {...otherProps}
     />
