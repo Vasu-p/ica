@@ -30,7 +30,7 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
     },
     {
       id: "numBedBatch",
-      Header: <TableHeader text={"Num Bed - Num Bath"} />,
+      Header: <TableHeader text={"Bed - Bath"} />,
       accessor: (row) => `${row.floorplanBed}-${row.floorplanBath}`,
       width: 50,
     },
@@ -127,6 +127,8 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
       groupable={true}
       filterable={true}
       rowHeight={rowHeight}
+      headerRowHeight={50}
+      alternateRowColor={true}
       scaleWidthMode={AnalyticalTableScaleWidthMode.Default}
       {...otherProps}
     />

@@ -77,6 +77,7 @@ export function CommunityList({ onShowDetails, ...otherprops }) {
       groupBy={["city"]}
       groupable={true}
       filterable={true}
+      headerRowHeight={50}
       selectionMode={AnalyticalTableSelectionMode.MultiSelect}
       onRowSelect={(e) => {
         console.log("selected rowws", e.detail.selectedFlatRows);
