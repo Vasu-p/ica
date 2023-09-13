@@ -4,6 +4,7 @@ import moment from "moment";
 import {
   AnalyticalTable,
   AnalyticalTableScaleWidthMode,
+  Badge,
   Button,
   Toolbar,
   ToolbarSpacer,
@@ -46,9 +47,22 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
         id: "amenities",
         Header: <TableHeader text={"Amenities"} />,
         accessor: "unitAmenities",
-        minWidth: 300,
+        minWidth: 400,
         Cell: ({ cell: { value } }) => (
-          <span style={{ textWrap: "balance" }}>{value.join(", ")}</span>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+            {value.map((amenity) => (
+              <span
+                style={{
+                  display: "inline-block",
+                  padding: "2px",
+                  border: "solid black 1px",
+                  borderRadius: "5px",
+                }}
+              >
+                {amenity}
+              </span>
+            ))}
+          </div>
         ),
       },
       {
@@ -79,7 +93,7 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
       .map((amenities) => amenities.join(", "))
       .map((amenitieStr) => amenitieStr.length);
 
-    return _.max(allAmenitiesLength) * 0.5 || 100;
+    return _.max(allAmenitiesLength) * 0.6 || 100;
   }, [availableApartments]);
 
   useEffect(() => {
