@@ -23,6 +23,9 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
         id: "communityName",
         Header: <TableHeader text={"Community Name"} />,
         accessor: "communityMarketingName",
+        Cell: ({ cell: { value } }) => (
+          <span style={{ textWrap: "balance" }}>{value}</span>
+        ),
       },
       {
         id: "numBedBatch",
