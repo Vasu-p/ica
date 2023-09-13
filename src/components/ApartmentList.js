@@ -18,39 +18,44 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
   console.log("apartment list comms", communities);
   const [availableApartments, setAvailableApartments] = useState([]);
 
-  const columns = useMemo(
-    () => [
-      {
-        id: "communityName",
-        Header: <TableHeader text={"Community Name"} />,
-        accessor: "communityMarketingName",
-        Cell: ({ cell: { value } }) => (
-          <span style={{ textWrap: "balance" }}>{value}</span>
-        ),
-      },
-      {
-        id: "numBedBatch",
-        Header: <TableHeader text={"Num Bed - Num Bath"} />,
-        accessor: (row) => `${row.floorplanBed}-${row.floorplanBath}`,
-      },
-      {
-        id: "floor",
-        Header: <TableHeader text={"Floor"} />,
-        accessor: "unitFloor",
-      },
-      {
-        id: "area",
-        Header: <TableHeader text={"Area"} />,
-        accessor: "unitSqFt",
-      },
-      {
-        id: "amenities",
-        Header: <TableHeader text={"Amenities"} />,
-        accessor: "unitAmenities",
-        minWidth: 400,
-        Cell: ({ cell: { value } }) => (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
-            {value.map((amenity) => (
+  const columns = useMemo(() => [
+    {
+      id: "communityName",
+      Header: <TableHeader text={"Community Name"} />,
+      accessor: "communityMarketingName",
+      Cell: ({ cell: { value } }) => (
+        <span style={{ textWrap: "balance" }}>{value}</span>
+      ),
+      width: 150,
+    },
+    {
+      id: "numBedBatch",
+      Header: <TableHeader text={"Num Bed - Num Bath"} />,
+      accessor: (row) => `${row.floorplanBed}-${row.floorplanBath}`,
+      width: 50,
+    },
+    {
+      id: "floor",
+      Header: <TableHeader text={"Floor"} />,
+      accessor: "unitFloor",
+      width: 50,
+    },
+    {
+      id: "area",
+      Header: <TableHeader text={"Area"} />,
+      accessor: "unitSqFt",
+      width: 50,
+    },
+    {
+      id: "amenities",
+      Header: <TableHeader text={"Amenities"} />,
+      accessor: "unitAmenities",
+
+      Cell: ({ cell: { value } }) => (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+          {value
+            .filter((amenity) => !amenity.includes("Floor"))
+            .map((amenity) => (
               <span
                 style={{
                   display: "inline-block",
@@ -62,25 +67,25 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
                 {amenity}
               </span>
             ))}
-          </div>
-        ),
-      },
-      {
-        id: "available",
-        Header: <TableHeader text={"Earliest Available"} />,
-        accessor: (row) =>
-          moment
-            .unix(row.unitEarliestAvailable.dateTimeStamp)
-            .format("MM-DD-YYYY"),
-      },
-      {
-        id: "price",
-        Header: <TableHeader text={"Price"} />,
-        accessor: "unitEarliestAvailable.price",
-      },
-    ],
-    []
-  );
+        </div>
+      ),
+    },
+    {
+      id: "available",
+      Header: <TableHeader text={"Earliest Available"} />,
+      accessor: (row) =>
+        moment
+          .unix(row.unitEarliestAvailable.dateTimeStamp)
+          .format("MM-DD-YYYY"),
+      width: 100,
+    },
+    {
+      id: "price",
+      Header: <TableHeader text={"Price"} />,
+      accessor: "unitEarliestAvailable.price",
+      width: 100,
+    },
+  ]);
 
   const propertyIds = useMemo(
     () => getPropertyIdsForCommunities(communities),
@@ -89,11 +94,13 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
 
   const rowHeight = useMemo(() => {
     const allAmenitiesLength = availableApartments
-      .map((apt) => apt.unitAmenities)
+      .map((apt) =>
+        apt.unitAmenities.filter((amenity) => !amenity.includes("Floor"))
+      )
       .map((amenities) => amenities.join(", "))
       .map((amenitieStr) => amenitieStr.length);
 
-    return _.max(allAmenitiesLength) * 0.6 || 100;
+    return _.max(allAmenitiesLength) * 0.5 || 100;
   }, [availableApartments]);
 
   useEffect(() => {
@@ -120,7 +127,7 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
       groupable={true}
       filterable={true}
       rowHeight={rowHeight}
-      scaleWidthMode={AnalyticalTableScaleWidthMode.Smart}
+      scaleWidthMode={AnalyticalTableScaleWidthMode.Default}
       {...otherProps}
     />
   );
