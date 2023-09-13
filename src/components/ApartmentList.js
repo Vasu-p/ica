@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import _ from "lodash";
 import moment from "moment";
 import {
   AnalyticalTable,
@@ -69,16 +70,22 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
     [communities]
   );
 
-  console.log("property ids", propertyIds);
+  const rowHeight = useMemo(() => {
+    const allAmenitiesLength = availableApartments
+      .map((apt) => apt.unitAmenities)
+      .map((amenities) => amenities.join(", "))
+      .map((amenitieStr) => amenitieStr.length);
+
+    return _.max(allAmenitiesLength) * 0.5 || 100;
+  }, [availableApartments]);
 
   useEffect(() => {
     async function fetchAvailableApartments() {
       const response = await getAllAvailableApartments(propertyIds);
-      console.log("response", response);
+
       return response.data.results[0].hits;
     }
     fetchAvailableApartments().then((data) => {
-      console.log("data", data);
       setAvailableApartments(data);
     });
   }, [propertyIds]);
@@ -95,7 +102,7 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
       columns={columns}
       groupable={true}
       filterable={true}
-      rowHeight={100}
+      rowHeight={rowHeight}
       scaleWidthMode={AnalyticalTableScaleWidthMode.Smart}
       {...otherProps}
     />
