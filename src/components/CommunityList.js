@@ -9,6 +9,8 @@ import {
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { getAllCommunities } from "../apis";
 
+import { TableHeader } from "../common/TableHeader";
+
 export function CommunityList({ onShowDetails, ...otherprops }) {
   const [communityList, setCommunityList] = useState([]);
   const [selectedCommunities, setSelectedCommunities] = useState([]);
@@ -29,33 +31,33 @@ export function CommunityList({ onShowDetails, ...otherprops }) {
     () => [
       {
         id: "city",
-        Header: "City",
+        Header: <TableHeader text={"City"} />,
         accessor: "cityName",
         sortType: "alphanumeric",
       },
       {
         id: "community",
-        Header: "Community",
+        Header: <TableHeader text={"Community"} />,
         accessor: "communityName",
       },
       {
         id: "minBed",
-        Header: "Min Bedrooms",
+        Header: <TableHeader text={"Min Bedrooms"} />,
         accessor: "calc_minBedrooms",
       },
       {
         id: "maxBed",
-        Header: "Max Bedrooms",
+        Header: <TableHeader text={"Max Bedrooms"} />,
         accessor: "calc_maxBedrooms",
       },
       {
         id: "minRent",
-        Header: "Min Rent",
+        Header: <TableHeader text={"Min Rent"} />,
         accessor: "calc_minRent",
       },
       {
         id: "maxRent",
-        Header: "Max Rent",
+        Header: <TableHeader text={"Max Rent"} />,
         accessor: "calc_maxRent",
       },
     ],

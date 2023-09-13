@@ -1,92 +1,115 @@
 import React, { useEffect, useMemo, useState } from "react";
+import _ from "lodash";
 import moment from "moment";
 import {
   AnalyticalTable,
   AnalyticalTableScaleWidthMode,
   Badge,
   Button,
-  FlexBox,
-  FlexBoxDirection,
   Toolbar,
   ToolbarSpacer,
 } from "@ui5/webcomponents-react";
 
 import { getPropertyIdsForCommunities } from "../utils";
 import { getAllAvailableApartments } from "../apis";
+import { TableHeader } from "./../common/TableHeader";
 
 export function ApartmentList({ communities, onClose, ...otherProps }) {
   console.log("apartment list comms", communities);
   const [availableApartments, setAvailableApartments] = useState([]);
 
-  const columns = useMemo(
-    () => [
-      {
-        id: "communityName",
-        Header: "Community Name",
-        accessor: "communityMarketingName",
-      },
-      {
-        id: "numBedBatch",
-        Header: "Num Bed - Num Bath",
-        accessor: (row) => `${row.floorplanBed}-${row.floorplanBath}`,
-      },
-      {
-        id: "floor",
-        Header: "Floor",
-        accessor: "unitFloor",
-      },
-      {
-        id: "area",
-        Header: "Area",
-        accessor: "unitSqFt",
-      },
-      {
-        id: "amenities",
-        Header: "Amenities",
-        accessor: "unitAmenities",
-        minWidth: 200,
-        Cell: ({ cell: { value } }) => {
-          return (
-            <FlexBox direction={FlexBoxDirection.Column}>
-              {value.map((amenity) => (
-                <Badge colorScheme="8">{amenity}</Badge>
-              ))}
-            </FlexBox>
-          );
-        },
-      },
-      {
-        id: "available",
-        Header: "Earliest Available",
-        accessor: (row) =>
-          moment
-            .unix(row.unitEarliestAvailable.dateTimeStamp)
-            .format("MM-DD-YYYY"),
-      },
-      {
-        id: "price",
-        Header: "Price",
-        accessor: "unitEarliestAvailable.price",
-      },
-    ],
-    []
-  );
+  const columns = useMemo(() => [
+    {
+      id: "communityName",
+      Header: <TableHeader text={"Community Name"} />,
+      accessor: "communityMarketingName",
+      Cell: ({ cell: { value } }) => (
+        <span style={{ textWrap: "balance" }}>{value}</span>
+      ),
+      width: 150,
+    },
+    {
+      id: "numBedBatch",
+      Header: <TableHeader text={"Num Bed - Num Bath"} />,
+      accessor: (row) => `${row.floorplanBed}-${row.floorplanBath}`,
+      width: 50,
+    },
+    {
+      id: "floor",
+      Header: <TableHeader text={"Floor"} />,
+      accessor: "unitFloor",
+      width: 50,
+    },
+    {
+      id: "area",
+      Header: <TableHeader text={"Area"} />,
+      accessor: "unitSqFt",
+      width: 50,
+    },
+    {
+      id: "amenities",
+      Header: <TableHeader text={"Amenities"} />,
+      accessor: "unitAmenities",
+
+      Cell: ({ cell: { value } }) => (
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
+          {value
+            .filter((amenity) => !amenity.includes("Floor"))
+            .map((amenity) => (
+              <span
+                style={{
+                  display: "inline-block",
+                  padding: "2px",
+                  border: "solid black 1px",
+                  borderRadius: "5px",
+                }}
+              >
+                {amenity}
+              </span>
+            ))}
+        </div>
+      ),
+    },
+    {
+      id: "available",
+      Header: <TableHeader text={"Earliest Available"} />,
+      accessor: (row) =>
+        moment
+          .unix(row.unitEarliestAvailable.dateTimeStamp)
+          .format("MM-DD-YYYY"),
+      width: 100,
+    },
+    {
+      id: "price",
+      Header: <TableHeader text={"Price"} />,
+      accessor: "unitEarliestAvailable.price",
+      width: 100,
+    },
+  ]);
 
   const propertyIds = useMemo(
     () => getPropertyIdsForCommunities(communities),
     [communities]
   );
 
-  console.log("property ids", propertyIds);
+  const rowHeight = useMemo(() => {
+    const allAmenitiesLength = availableApartments
+      .map((apt) =>
+        apt.unitAmenities.filter((amenity) => !amenity.includes("Floor"))
+      )
+      .map((amenities) => amenities.join(", "))
+      .map((amenitieStr) => amenitieStr.length);
+
+    return _.max(allAmenitiesLength) * 0.5 || 100;
+  }, [availableApartments]);
 
   useEffect(() => {
     async function fetchAvailableApartments() {
       const response = await getAllAvailableApartments(propertyIds);
-      console.log("response", response);
+
       return response.data.results[0].hits;
     }
     fetchAvailableApartments().then((data) => {
-      console.log("data", data);
       setAvailableApartments(data);
     });
   }, [propertyIds]);
@@ -103,8 +126,8 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
       columns={columns}
       groupable={true}
       filterable={true}
-      rowHeight={70}
-      scaleWidthMode={AnalyticalTableScaleWidthMode.Smart}
+      rowHeight={rowHeight}
+      scaleWidthMode={AnalyticalTableScaleWidthMode.Default}
       {...otherProps}
     />
   );
