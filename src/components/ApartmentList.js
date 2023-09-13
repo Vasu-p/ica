@@ -18,6 +18,20 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
   console.log("apartment list comms", communities);
   const [availableApartments, setAvailableApartments] = useState([]);
 
+  const amenitiesFilter = useMemo(
+    () => (rows, id, filterValue) => {
+      // separate filterValue with comma and return all rows which have all the amenities
+      const filterValues = filterValue.split(",").map((val) => val.trim());
+      return rows.filter((row) => {
+        const rowAmenitiesString = row.original.unitAmenities.join(",");
+        return filterValues.every((filterVal) =>
+          rowAmenitiesString.toLowerCase().includes(filterVal.toLowerCase())
+        );
+      });
+    },
+    []
+  );
+
   const columns = useMemo(() => [
     {
       id: "communityName",
@@ -50,23 +64,21 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
       id: "amenities",
       Header: <TableHeader text={"Amenities"} />,
       accessor: "unitAmenities",
-
+      filter: amenitiesFilter,
       Cell: ({ cell: { value } }) => (
         <div style={{ display: "flex", flexWrap: "wrap", gap: "5px" }}>
-          {value
-            .filter((amenity) => !amenity.includes("Floor"))
-            .map((amenity) => (
-              <span
-                style={{
-                  display: "inline-block",
-                  padding: "2px",
-                  border: "solid black 1px",
-                  borderRadius: "5px",
-                }}
-              >
-                {amenity}
-              </span>
-            ))}
+          {value.map((amenity) => (
+            <span
+              style={{
+                display: "inline-block",
+                padding: "2px",
+                border: "solid black 1px",
+                borderRadius: "5px",
+              }}
+            >
+              {amenity}
+            </span>
+          ))}
         </div>
       ),
     },
@@ -94,9 +106,7 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
 
   const rowHeight = useMemo(() => {
     const allAmenitiesLength = availableApartments
-      .map((apt) =>
-        apt.unitAmenities.filter((amenity) => !amenity.includes("Floor"))
-      )
+      .map((apt) => apt.unitAmenities)
       .map((amenities) => amenities.join(", "))
       .map((amenitieStr) => amenitieStr.length);
 
