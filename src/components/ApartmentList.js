@@ -4,7 +4,7 @@ import moment from "moment";
 import {
   AnalyticalTable,
   AnalyticalTableScaleWidthMode,
-  Badge,
+  AnalyticalTableVisibleRowCountMode,
   Button,
   Toolbar,
   ToolbarSpacer,
@@ -140,6 +140,8 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
       headerRowHeight={50}
       alternateRowColor={true}
       scaleWidthMode={AnalyticalTableScaleWidthMode.Default}
+      visibleRowCountMode={AnalyticalTableVisibleRowCountMode.Auto}
+      style={{ display: "flex", flexGrow: "1" }}
       {...otherProps}
     />
   );
