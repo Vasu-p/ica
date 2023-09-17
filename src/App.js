@@ -4,6 +4,7 @@ import {
   FCLLayout,
   FlexibleColumnLayout,
   ShellBar,
+  ShellBarItem,
   ThemeProvider,
 } from "@ui5/webcomponents-react";
 
@@ -14,6 +15,8 @@ import "@ui5/webcomponents-react/dist/Assets";
 
 import { CommunityList } from "./components/CommunityList";
 import { ApartmentList } from "./components/ApartmentList";
+
+import "@ui5/webcomponents-icons/dist/sys-help";
 
 function App() {
   // change theme to horizon
@@ -32,7 +35,9 @@ function App() {
 
   return (
     <ThemeProvider>
-      <ShellBar primaryTitle="Irvine Company Apartments" />
+      <ShellBar primaryTitle="Irvine Company Apartments">
+        <ShellBarItem icon="sys-help" text="sys-help" />
+      </ShellBar>
       <FlexibleColumnLayout
         startColumn={<CommunityList onShowDetails={showApartmentDetails} />}
         midColumn={
