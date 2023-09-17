@@ -37,7 +37,10 @@ function App() {
 
   return (
     <ThemeProvider>
-      <ShellBar primaryTitle="Irvine Company Apartments">
+      <ShellBar
+        primaryTitle="Irvine Company Apartments"
+        logo={<img src="/logo.png" alt="" />}
+      >
         <ShellBarItem
           icon="sys-help"
           text="sys-help"
