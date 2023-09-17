@@ -7,6 +7,8 @@ import {
   ThemeProvider,
 } from "@ui5/webcomponents-react";
 
+import "./App.css";
+
 import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme";
 import "@ui5/webcomponents-react/dist/Assets";
 
