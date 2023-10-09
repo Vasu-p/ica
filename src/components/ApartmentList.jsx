@@ -12,7 +12,7 @@ import {
 
 import { getPropertyIdsForCommunities } from "../utils";
 import { getAllAvailableApartments } from "../apis";
-import { TableHeader } from "./../common/TableHeader";
+import { TableHeader } from "../common/TableHeader";
 
 export function ApartmentList({ communities, onClose, ...otherProps }) {
   console.log("apartment list comms", communities);
