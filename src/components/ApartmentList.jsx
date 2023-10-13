@@ -8,6 +8,12 @@ import {
   Button,
   Toolbar,
   ToolbarSpacer,
+  FilterBar,
+  FilterGroupItem,
+  MultiComboBox,
+  MultiComboBoxItem,
+  Input,
+  Select,
 } from "@ui5/webcomponents-react";
 
 import { getPropertyIdsForCommunities } from "../utils";
@@ -88,7 +94,7 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
       accessor: (row) =>
         moment
           .unix(row.unitEarliestAvailable.dateTimeStamp)
-          .format("MM-DD-YYYY"),
+          .format("MMM DD YYYY"),
       width: 100,
     },
     {
@@ -125,25 +131,44 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
   }, [propertyIds]);
 
   return (
-    <AnalyticalTable
-      header={
-        <Toolbar>
-          <ToolbarSpacer />
-          <Button onClick={onClose}>Close</Button>
-        </Toolbar>
-      }
-      data={availableApartments}
-      columns={columns}
-      groupable={true}
-      filterable={true}
-      rowHeight={rowHeight}
-      headerRowHeight={50}
-      alternateRowColor={true}
-      scaleWidthMode={AnalyticalTableScaleWidthMode.Default}
-      visibleRowCountMode={AnalyticalTableVisibleRowCountMode.Auto}
-      style={{ display: "flex", flexGrow: "1" }}
-      {...otherProps}
-    />
+    <>
+      <FilterBar
+        hideToolbar={true}
+        hideFilterConfiguration={true}
+        style={{ padding: "1rem" }}
+        showGoOnFB={true}
+        onGo={() => {}}
+      >
+        <FilterGroupItem label="Num Bed">
+          <MultiComboBox>
+            <MultiComboBoxItem text="1" />
+          </MultiComboBox>
+        </FilterGroupItem>
+        <FilterGroupItem label="Num Bath">
+          <MultiComboBox>
+            <MultiComboBoxItem text="1" />
+          </MultiComboBox>
+        </FilterGroupItem>
+        <FilterGroupItem label="Max Price">
+          <Input />
+        </FilterGroupItem>
+        <FilterGroupItem label="Min Area">
+          <Input />
+        </FilterGroupItem>
+      </FilterBar>
+      <AnalyticalTable
+        data={availableApartments}
+        columns={columns}
+        groupable={true}
+        filterable={true}
+        rowHeight={rowHeight}
+        headerRowHeight={50}
+        alternateRowColor={true}
+        scaleWidthMode={AnalyticalTableScaleWidthMode.Default}
+        visibleRowCountMode={AnalyticalTableVisibleRowCountMode.Fixed}
+        {...otherProps}
+      />
+    </>
   );
 }
 /*

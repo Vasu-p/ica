@@ -2,6 +2,8 @@ import { useCallback, useState } from "react";
 
 import {
   FCLLayout,
+  FlexBox,
+  FlexBoxDirection,
   FlexibleColumnLayout,
   ShellBar,
   ShellBarItem,
@@ -51,15 +53,9 @@ function App() {
         open={showHelpDialog}
         onClose={() => setShowHelpDialog(false)}
       />
-      <FlexibleColumnLayout
-        startColumn={<CommunityList onShowDetails={showApartmentDetails} />}
-        midColumn={
-          <ApartmentList
-            communities={communitiesToShowDetails}
-            onClose={handleApartmentListClose}
-          />
-        }
-        layout={layout}
+      <ApartmentList
+        communities={communitiesToShowDetails}
+        onClose={handleApartmentListClose}
       />
     </ThemeProvider>
   );

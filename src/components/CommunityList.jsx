@@ -5,12 +5,6 @@ import {
   Toolbar,
   ToolbarSpacer,
   IllustratedMessage,
-  FilterBar,
-  FilterGroupItem,
-  MultiComboBox,
-  MultiComboBoxItem,
-  Input,
-  Select,
 } from "@ui5/webcomponents-react";
 import "@ui5/webcomponents-fiori/dist/illustrations/BeforeSearch";
 
@@ -74,38 +68,6 @@ export function CommunityList({ onShowDetails, slot, ...otherprops }) {
 
   return (
     <div slot={slot}>
-      <FilterBar
-        hideToolbar={true}
-        hideFilterConfiguration={true}
-        style={{ padding: "1rem" }}
-        showGoOnFB={true}
-        onGo={() => {}}
-      >
-        <FilterGroupItem label="City" required>
-          <MultiComboBox>
-            <MultiComboBoxItem text="Irvine" />
-          </MultiComboBox>
-        </FilterGroupItem>
-        <FilterGroupItem label="Num Bed">
-          <MultiComboBox>
-            <MultiComboBoxItem text="1" />
-          </MultiComboBox>
-        </FilterGroupItem>
-        <FilterGroupItem label="Num Bath">
-          <MultiComboBox>
-            <MultiComboBoxItem text="1" />
-          </MultiComboBox>
-        </FilterGroupItem>
-        <FilterGroupItem label="Max Price">
-          <Input />
-        </FilterGroupItem>
-        <FilterGroupItem label="Min Area">
-          <Input />
-        </FilterGroupItem>
-        <FilterGroupItem label="Amenities">
-          <Select></Select>
-        </FilterGroupItem>
-      </FilterBar>
       <AnalyticalTable
         header={
           <Toolbar>
