@@ -92,30 +92,32 @@ export function ApartmentList({ availableApartments, loading, ...otherProps }) {
     },
   ]);
 
-  const rowHeight = useMemo(() => {
-    const allAmenitiesLength = availableApartments
-      .map((apt) => apt.unitAmenities)
-      .map((amenities) => amenities.join(", "))
-      .map((amenitieStr) => amenitieStr.length);
+  // const rowHeight = useMemo(() => {
+  //   const allAmenitiesLength = availableApartments
+  //     .map((apt) => apt.unitAmenities)
+  //     .map((amenities) => amenities.join(", "))
+  //     .map((amenitieStr) => amenitieStr.length);
 
-    return _.max(allAmenitiesLength) * 0.3 || 100;
-  }, [availableApartments]);
+  //   return _.max(allAmenitiesLength) * 0.35 || 100;
+  // }, [availableApartments]);
 
   return (
-    <AnalyticalTable
-      data={availableApartments}
-      columns={columns}
-      groupable={true}
-      filterable={true}
-      rowHeight={rowHeight}
-      headerRowHeight={50}
-      alternateRowColor={true}
-      scaleWidthMode={AnalyticalTableScaleWidthMode.Default}
-      visibleRowCountMode={AnalyticalTableVisibleRowCountMode.Auto}
-      loading={loading}
-      NoDataComponent={() => <IllustratedMessage />}
-      {...otherProps}
-    />
+    <div style={{ height: "100%" }}>
+      <AnalyticalTable
+        data={availableApartments}
+        columns={columns}
+        groupable={true}
+        filterable={true}
+        rowHeight={70}
+        headerRowHeight={50}
+        alternateRowColor={true}
+        scaleWidthMode={AnalyticalTableScaleWidthMode.Default}
+        visibleRowCountMode={AnalyticalTableVisibleRowCountMode.Auto}
+        loading={loading}
+        NoDataComponent={() => <IllustratedMessage />}
+        {...otherProps}
+      />
+    </div>
   );
 }
 /*
