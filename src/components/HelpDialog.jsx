@@ -17,14 +17,10 @@ export const HelpDialog = ({ open, onClose }) => {
       <h3>Usage Tips</h3>
       <p>
         <ul>
-          <li>Use Table Filters and Sorting to narrow down the choices</li>
+          <li>Use Filters to narrow down the choices</li>
+          <li>Click on table header to sort/filter</li>
           <li>
-            Select multiple communities at same time and click "Show Details" to
-            compare across communities
-          </li>
-          <li>
-            On Details page, community amenities can be filtered by using comma
-            separated values.
+            Community amenities can be filtered by using comma separated values.
             <ul>
               <li>
                 E.g. To search for communities which have hardwood floor and are
