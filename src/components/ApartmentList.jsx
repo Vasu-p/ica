@@ -5,6 +5,7 @@ import {
   AnalyticalTable,
   AnalyticalTableScaleWidthMode,
   AnalyticalTableVisibleRowCountMode,
+  IllustratedMessage,
 } from "@ui5/webcomponents-react";
 
 import { TableHeader } from "../common/TableHeader";
@@ -112,6 +113,7 @@ export function ApartmentList({ availableApartments, loading, ...otherProps }) {
       scaleWidthMode={AnalyticalTableScaleWidthMode.Default}
       visibleRowCountMode={AnalyticalTableVisibleRowCountMode.Auto}
       loading={loading}
+      NoDataComponent={() => <IllustratedMessage />}
       {...otherProps}
     />
   );
