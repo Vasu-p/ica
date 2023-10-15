@@ -104,6 +104,7 @@ export function getAvailableApartments(
         "communityIDAEM",
         "communityMarketingName",
         "floorplanName",
+        "unitFloor",
         "unitCRMID",
         "floorplanBed",
         "floorplanBath",

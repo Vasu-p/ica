@@ -9,8 +9,8 @@ import {
   ShellBar,
   ShellBarItem,
   ThemeProvider,
-  Select,
-  Option,
+  FlexBox,
+  FlexBoxDirection,
 } from "@ui5/webcomponents-react";
 
 import "./App.css";
@@ -82,64 +82,66 @@ function App() {
 
   return (
     <ThemeProvider>
-      <ShellBar
-        primaryTitle="Irvine Company Apartments"
-        logo={<img src="/logo.png" alt="" />}
-      >
-        <ShellBarItem
-          icon="sys-help"
-          text="sys-help"
-          onClick={() => setShowHelpDialog(true)}
+      <FlexBox direction={FlexBoxDirection.Column} style={{ height: "100vh" }}>
+        <ShellBar
+          primaryTitle="Irvine Company Apartments"
+          logo={<img src="/logo.png" alt="" />}
+        >
+          <ShellBarItem
+            icon="sys-help"
+            text="sys-help"
+            onClick={() => setShowHelpDialog(true)}
+          />
+        </ShellBar>
+        <HelpDialog
+          open={showHelpDialog}
+          onClose={() => setShowHelpDialog(false)}
         />
-      </ShellBar>
-      <HelpDialog
-        open={showHelpDialog}
-        onClose={() => setShowHelpDialog(false)}
-      />
-      <FilterBar
-        hideToolbar={true}
-        hideFilterConfiguration={true}
-        style={{ padding: "1rem" }}
-        showGoOnFB={true}
-        onGo={() => {
-          fetchApartments();
-        }}
-      >
-        <FilterGroupItem label="City">
-          <MultiComboBox onSelectionChange={handleCityChange}>
-            {cities.map((city) => (
-              <MultiComboBoxItem key={city.cityName} text={city.cityName} />
-            ))}
-          </MultiComboBox>
-        </FilterGroupItem>
-        <FilterGroupItem label="Num Bed">
-          <MultiComboBox onSelectionChange={handleNumBedChange}>
-            <MultiComboBoxItem text="0" />
-            <MultiComboBoxItem text="1" />
-            <MultiComboBoxItem text="2" />
-            <MultiComboBoxItem text="3" />
-          </MultiComboBox>
-        </FilterGroupItem>
-        <FilterGroupItem label="Num Bath">
-          <MultiComboBox onSelectionChange={handleNumBathChange}>
-            <MultiComboBoxItem text="1" />
-            <MultiComboBoxItem text="1.5" />
-            <MultiComboBoxItem text="2" />
-            <MultiComboBoxItem text="2.5" />
-            <MultiComboBoxItem text="3" />
-          </MultiComboBox>
-        </FilterGroupItem>
-        <FilterGroupItem label="Max Price">
-          <Input onInput={handleMaxPriceChange} />
-        </FilterGroupItem>
-        <FilterGroupItem label="Min Area">
-          <Input onInput={handleMinAreaChange} />
-        </FilterGroupItem>
-      </FilterBar>
-      <ApartmentList
-        availableApartments={availableApartments}
-        loading={loading}
-      />
+        <FilterBar
+          hideToolbar={true}
+          hideFilterConfiguration={true}
+          style={{ padding: "1rem" }}
+          showGoOnFB={true}
+          onGo={() => {
+            fetchApartments();
+          }}
+        >
+          <FilterGroupItem label="City">
+            <MultiComboBox onSelectionChange={handleCityChange}>
+              {cities.map((city) => (
+                <MultiComboBoxItem key={city.cityName} text={city.cityName} />
+              ))}
+            </MultiComboBox>
+          </FilterGroupItem>
+          <FilterGroupItem label="Num Bed">
+            <MultiComboBox onSelectionChange={handleNumBedChange}>
+              <MultiComboBoxItem text="0" />
+              <MultiComboBoxItem text="1" />
+              <MultiComboBoxItem text="2" />
+              <MultiComboBoxItem text="3" />
+            </MultiComboBox>
+          </FilterGroupItem>
+          <FilterGroupItem label="Num Bath">
+            <MultiComboBox onSelectionChange={handleNumBathChange}>
+              <MultiComboBoxItem text="1" />
+              <MultiComboBoxItem text="1.5" />
+              <MultiComboBoxItem text="2" />
+              <MultiComboBoxItem text="2.5" />
+              <MultiComboBoxItem text="3" />
+            </MultiComboBox>
+          </FilterGroupItem>
+          <FilterGroupItem label="Max Price">
+            <Input onInput={handleMaxPriceChange} />
+          </FilterGroupItem>
+          <FilterGroupItem label="Min Area">
+            <Input onInput={handleMinAreaChange} />
+          </FilterGroupItem>
+        </FilterBar>
+        <ApartmentList
+          availableApartments={availableApartments}
+          loading={loading}
+        />
+      </FlexBox>
     </ThemeProvider>
   );
 }

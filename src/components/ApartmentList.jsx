@@ -97,7 +97,7 @@ export function ApartmentList({ availableApartments, loading, ...otherProps }) {
       .map((amenities) => amenities.join(", "))
       .map((amenitieStr) => amenitieStr.length);
 
-    return _.max(allAmenitiesLength) * 0.5 || 100;
+    return _.max(allAmenitiesLength) * 0.3 || 100;
   }, [availableApartments]);
 
   return (
@@ -110,7 +110,7 @@ export function ApartmentList({ availableApartments, loading, ...otherProps }) {
       headerRowHeight={50}
       alternateRowColor={true}
       scaleWidthMode={AnalyticalTableScaleWidthMode.Default}
-      visibleRowCountMode={AnalyticalTableVisibleRowCountMode.Fixed}
+      visibleRowCountMode={AnalyticalTableVisibleRowCountMode.Auto}
       loading={loading}
       {...otherProps}
     />
