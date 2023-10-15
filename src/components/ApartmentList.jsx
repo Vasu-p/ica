@@ -78,10 +78,10 @@ export function ApartmentList({ availableApartments, loading, ...otherProps }) {
     {
       id: "available",
       Header: <TableHeader text={"Earliest Available"} />,
-      accessor: (row) =>
-        moment
-          .unix(row.unitEarliestAvailable.dateTimeStamp)
-          .format("MMM DD YYYY"),
+      accessor: (row) => {
+        const date = moment.unix(row.unitEarliestAvailable.dateTimeStamp);
+        return date.isBefore(moment.now()) ? "Now" : date.format("MMM DD YYYY");
+      },
       width: 100,
     },
     {
