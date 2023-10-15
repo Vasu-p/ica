@@ -72,3 +72,71 @@ export function getAllAvailableApartments(propertyIds) {
     }
   );
 }
+
+export function getAvailableApartments(
+  communityIds = [],
+  beds = [],
+  baths = [],
+  minArea = 0,
+  maxPrice = 100000
+) {
+  let filterString = `unitStartingPrice.price<=${maxPrice} AND unitSqFt>=${minArea}`;
+  if (communityIds.length) {
+    filterString += ` AND (communityIDAEM:${communityIds.join(
+      " OR communityIDAEM:"
+    )})`;
+  }
+  if (beds.length) {
+    filterString += ` AND (floorplanBed=${beds.join(" OR floorplanBed=")})`;
+  }
+  if (baths.length) {
+    filterString += ` AND (floorplanBath=${baths.join(" OR floorplanBath=")})`;
+  }
+
+  return axios.post("https://search.irvinecompanyapartments.com/search", {
+    index: "prod_ica_unitAvailability_unitEarliestAvailable_asc",
+    query: "",
+    params: {
+      hitsPerPage: 3000,
+      attributesToHighlight: [],
+      filters: filterString,
+      attributesToRetrieve: [
+        "communityIDAEM",
+        "communityMarketingName",
+        "floorplanName",
+        "unitFloor",
+        "unitCRMID",
+        "floorplanBed",
+        "floorplanBath",
+        "unitSqFt",
+        "unitStartingPrice.price",
+        "unitAmenities",
+        "unitEarliestAvailable",
+      ],
+    },
+  });
+}
+
+export function getCommunityByCities(cities = []) {
+  return axios.post("https://search.irvinecompanyapartments.com/search", {
+    index: "prod_ica_community",
+    query: "",
+    params: {
+      hitsPerPage: 1000,
+      attributesToHighlight: [],
+      attributesToRetrieve: [
+        "osPropertyIds",
+        "cityName",
+        "calc_minBedrooms",
+        "calc_maxBedrooms",
+        "calc_minRent",
+        "calc_maxRent",
+        "communityName",
+      ],
+      // enclose city name in single quotes to avoid issues with spaces
+      filters: cities.length
+        ? `cityName:'${cities.join("' OR cityName:'")}'`
+        : "",
+    },
+  });
+}

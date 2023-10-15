@@ -4,14 +4,16 @@ import {
   Button,
   Toolbar,
   ToolbarSpacer,
+  IllustratedMessage,
 } from "@ui5/webcomponents-react";
+import "@ui5/webcomponents-fiori/dist/illustrations/BeforeSearch";
 
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { getAllCommunities } from "../apis";
 
 import { TableHeader } from "../common/TableHeader";
 
-export function CommunityList({ onShowDetails, ...otherprops }) {
+export function CommunityList({ onShowDetails, slot, ...otherprops }) {
   const [communityList, setCommunityList] = useState([]);
   const [selectedCommunities, setSelectedCommunities] = useState([]);
 
@@ -65,27 +67,33 @@ export function CommunityList({ onShowDetails, ...otherprops }) {
   );
 
   return (
-    <AnalyticalTable
-      header={
-        <Toolbar>
-          <ToolbarSpacer />
-          <Button onClick={handleShowDetails}>Show Details</Button>
-        </Toolbar>
-      }
-      data={communityList}
-      columns={columns}
-      groupBy={["city"]}
-      groupable={true}
-      filterable={true}
-      headerRowHeight={50}
-      selectionMode={AnalyticalTableSelectionMode.MultiSelect}
-      onRowSelect={(e) => {
-        console.log("selected rowws", e.detail.selectedFlatRows);
-        setSelectedCommunities(
-          e.detail.selectedFlatRows.map((row) => row.original)
-        );
-      }}
-      {...otherprops}
-    />
+    <div slot={slot}>
+      <AnalyticalTable
+        header={
+          <Toolbar>
+            <ToolbarSpacer />
+            <Button onClick={handleShowDetails}>Show Details</Button>
+          </Toolbar>
+        }
+        data={communityList}
+        columns={columns}
+        groupBy={["city"]}
+        groupable={true}
+        filterable={true}
+        headerRowHeight={50}
+        selectionMode={AnalyticalTableSelectionMode.MultiSelect}
+        onRowSelect={(e) => {
+          setSelectedCommunities(
+            e.detail.selectedFlatRows.map((row) => row.original)
+          );
+        }}
+        NoDataComponent={() => (
+          <IllustratedMessage
+            subtitleText={"Select one or more cities to start"}
+          />
+        )}
+        {...otherprops}
+      />
+    </div>
   );
 }

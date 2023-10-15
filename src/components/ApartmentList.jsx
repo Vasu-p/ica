@@ -5,19 +5,12 @@ import {
   AnalyticalTable,
   AnalyticalTableScaleWidthMode,
   AnalyticalTableVisibleRowCountMode,
-  Button,
-  Toolbar,
-  ToolbarSpacer,
+  IllustratedMessage,
 } from "@ui5/webcomponents-react";
 
-import { getPropertyIdsForCommunities } from "../utils";
-import { getAllAvailableApartments } from "../apis";
 import { TableHeader } from "../common/TableHeader";
 
-export function ApartmentList({ communities, onClose, ...otherProps }) {
-  console.log("apartment list comms", communities);
-  const [availableApartments, setAvailableApartments] = useState([]);
-
+export function ApartmentList({ availableApartments, loading, ...otherProps }) {
   const amenitiesFilter = useMemo(
     () => (rows, id, filterValue) => {
       // separate filterValue with comma and return all rows which have all the amenities
@@ -85,10 +78,10 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
     {
       id: "available",
       Header: <TableHeader text={"Earliest Available"} />,
-      accessor: (row) =>
-        moment
-          .unix(row.unitEarliestAvailable.dateTimeStamp)
-          .format("MM-DD-YYYY"),
+      accessor: (row) => {
+        const date = moment.unix(row.unitEarliestAvailable.dateTimeStamp);
+        return date.isBefore(moment.now()) ? "Now" : date.format("MMM DD YYYY");
+      },
       width: 100,
     },
     {
@@ -99,39 +92,17 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
     },
   ]);
 
-  const propertyIds = useMemo(
-    () => getPropertyIdsForCommunities(communities),
-    [communities]
-  );
-
   const rowHeight = useMemo(() => {
     const allAmenitiesLength = availableApartments
       .map((apt) => apt.unitAmenities)
       .map((amenities) => amenities.join(", "))
       .map((amenitieStr) => amenitieStr.length);
 
-    return _.max(allAmenitiesLength) * 0.5 || 100;
+    return _.max(allAmenitiesLength) * 0.3 || 100;
   }, [availableApartments]);
-
-  useEffect(() => {
-    async function fetchAvailableApartments() {
-      const response = await getAllAvailableApartments(propertyIds);
-
-      return response.data.results[0].hits;
-    }
-    fetchAvailableApartments().then((data) => {
-      setAvailableApartments(data);
-    });
-  }, [propertyIds]);
 
   return (
     <AnalyticalTable
-      header={
-        <Toolbar>
-          <ToolbarSpacer />
-          <Button onClick={onClose}>Close</Button>
-        </Toolbar>
-      }
       data={availableApartments}
       columns={columns}
       groupable={true}
@@ -141,7 +112,8 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
       alternateRowColor={true}
       scaleWidthMode={AnalyticalTableScaleWidthMode.Default}
       visibleRowCountMode={AnalyticalTableVisibleRowCountMode.Auto}
-      style={{ display: "flex", flexGrow: "1" }}
+      loading={loading}
+      NoDataComponent={() => <IllustratedMessage />}
       {...otherProps}
     />
   );
