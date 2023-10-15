@@ -83,10 +83,7 @@ function App() {
   return (
     <ThemeProvider>
       <FlexBox direction={FlexBoxDirection.Column} style={{ height: "100vh" }}>
-        <ShellBar
-          primaryTitle="Irvine Company Apartments"
-          logo={<img src="/logo.png" alt="" />}
-        >
+        <ShellBar primaryTitle="Easy ICA" logo={<img src="/logo.png" alt="" />}>
           <ShellBarItem
             icon="sys-help"
             text="sys-help"
