@@ -5,25 +5,11 @@ import {
   AnalyticalTable,
   AnalyticalTableScaleWidthMode,
   AnalyticalTableVisibleRowCountMode,
-  Button,
-  Toolbar,
-  ToolbarSpacer,
-  FilterBar,
-  FilterGroupItem,
-  MultiComboBox,
-  MultiComboBoxItem,
-  Input,
-  Select,
 } from "@ui5/webcomponents-react";
 
-import { getPropertyIdsForCommunities } from "../utils";
-import { getAllAvailableApartments } from "../apis";
 import { TableHeader } from "../common/TableHeader";
 
-export function ApartmentList({ communities, onClose, ...otherProps }) {
-  console.log("apartment list comms", communities);
-  const [availableApartments, setAvailableApartments] = useState([]);
-
+export function ApartmentList({ availableApartments, loading, ...otherProps }) {
   const amenitiesFilter = useMemo(
     () => (rows, id, filterValue) => {
       // separate filterValue with comma and return all rows which have all the amenities
@@ -105,11 +91,6 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
     },
   ]);
 
-  const propertyIds = useMemo(
-    () => getPropertyIdsForCommunities(communities),
-    [communities]
-  );
-
   const rowHeight = useMemo(() => {
     const allAmenitiesLength = availableApartments
       .map((apt) => apt.unitAmenities)
@@ -119,56 +100,20 @@ export function ApartmentList({ communities, onClose, ...otherProps }) {
     return _.max(allAmenitiesLength) * 0.5 || 100;
   }, [availableApartments]);
 
-  useEffect(() => {
-    async function fetchAvailableApartments() {
-      const response = await getAllAvailableApartments(propertyIds);
-
-      return response.data.results[0].hits;
-    }
-    fetchAvailableApartments().then((data) => {
-      setAvailableApartments(data);
-    });
-  }, [propertyIds]);
-
   return (
-    <>
-      <FilterBar
-        hideToolbar={true}
-        hideFilterConfiguration={true}
-        style={{ padding: "1rem" }}
-        showGoOnFB={true}
-        onGo={() => {}}
-      >
-        <FilterGroupItem label="Num Bed">
-          <MultiComboBox>
-            <MultiComboBoxItem text="1" />
-          </MultiComboBox>
-        </FilterGroupItem>
-        <FilterGroupItem label="Num Bath">
-          <MultiComboBox>
-            <MultiComboBoxItem text="1" />
-          </MultiComboBox>
-        </FilterGroupItem>
-        <FilterGroupItem label="Max Price">
-          <Input />
-        </FilterGroupItem>
-        <FilterGroupItem label="Min Area">
-          <Input />
-        </FilterGroupItem>
-      </FilterBar>
-      <AnalyticalTable
-        data={availableApartments}
-        columns={columns}
-        groupable={true}
-        filterable={true}
-        rowHeight={rowHeight}
-        headerRowHeight={50}
-        alternateRowColor={true}
-        scaleWidthMode={AnalyticalTableScaleWidthMode.Default}
-        visibleRowCountMode={AnalyticalTableVisibleRowCountMode.Fixed}
-        {...otherProps}
-      />
-    </>
+    <AnalyticalTable
+      data={availableApartments}
+      columns={columns}
+      groupable={true}
+      filterable={true}
+      rowHeight={rowHeight}
+      headerRowHeight={50}
+      alternateRowColor={true}
+      scaleWidthMode={AnalyticalTableScaleWidthMode.Default}
+      visibleRowCountMode={AnalyticalTableVisibleRowCountMode.Fixed}
+      loading={loading}
+      {...otherProps}
+    />
   );
 }
 /*

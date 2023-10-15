@@ -1,13 +1,16 @@
 import { useCallback, useState } from "react";
 
 import {
-  FCLLayout,
-  FlexBox,
-  FlexBoxDirection,
-  FlexibleColumnLayout,
+  FilterBar,
+  FilterGroupItem,
+  MultiComboBox,
+  MultiComboBoxItem,
+  Input,
   ShellBar,
   ShellBarItem,
   ThemeProvider,
+  Select,
+  Option,
 } from "@ui5/webcomponents-react";
 
 import "./App.css";
@@ -20,22 +23,62 @@ import { ApartmentList } from "./components/ApartmentList";
 import { HelpDialog } from "./components/HelpDialog";
 
 import "@ui5/webcomponents-icons/dist/sys-help";
+import { useAvailableApartments } from "./hooks/useAvailableApartments";
+import { cities } from "./data/cities";
 
 function App() {
   // change theme to horizon
   setTheme("sap_horizon");
-  const [layout, setLayout] = useState(FCLLayout.OneColumn);
-  const [communitiesToShowDetails, setCommunitiesToShowDetails] = useState([]);
+
   const [showHelpDialog, setShowHelpDialog] = useState(false);
+  const {
+    availableApartments,
+    fetchApartments,
+    setNumBeds,
+    setNumBaths,
+    setMinArea,
+    setMaxPrice,
+    setCities,
+    loading,
+  } = useAvailableApartments();
 
-  const showApartmentDetails = useCallback((selectedCommunities) => {
-    setCommunitiesToShowDetails(selectedCommunities);
-    setLayout(FCLLayout.TwoColumnsMidExpanded);
-  }, []);
+  const handleCityChange = useCallback(
+    (event) => {
+      const selection = event.detail.items;
+      setCities(selection.map((item) => item.text));
+    },
+    [setCities]
+  );
 
-  const handleApartmentListClose = useCallback(() => {
-    setLayout(FCLLayout.OneColumn);
-  }, []);
+  const handleNumBedChange = useCallback(
+    (event) => {
+      const selection = event.detail.items;
+      setNumBeds(selection.map((item) => item.text));
+    },
+    [setNumBeds]
+  );
+
+  const handleNumBathChange = useCallback(
+    (event) => {
+      const selection = event.detail.items;
+      setNumBaths(selection.map((item) => item.text));
+    },
+    [setNumBaths]
+  );
+
+  const handleMinAreaChange = useCallback(
+    (event) => {
+      setMinArea(event.target.value);
+    },
+    [setMinArea]
+  );
+
+  const handleMaxPriceChange = useCallback(
+    (event) => {
+      setMaxPrice(event.target.value);
+    },
+    [setMaxPrice]
+  );
 
   return (
     <ThemeProvider>
@@ -53,9 +96,49 @@ function App() {
         open={showHelpDialog}
         onClose={() => setShowHelpDialog(false)}
       />
+      <FilterBar
+        hideToolbar={true}
+        hideFilterConfiguration={true}
+        style={{ padding: "1rem" }}
+        showGoOnFB={true}
+        onGo={() => {
+          fetchApartments();
+        }}
+      >
+        <FilterGroupItem label="City">
+          <MultiComboBox onSelectionChange={handleCityChange}>
+            {cities.map((city) => (
+              <MultiComboBoxItem key={city.cityName} text={city.cityName} />
+            ))}
+          </MultiComboBox>
+        </FilterGroupItem>
+        <FilterGroupItem label="Num Bed">
+          <MultiComboBox onSelectionChange={handleNumBedChange}>
+            <MultiComboBoxItem text="0" />
+            <MultiComboBoxItem text="1" />
+            <MultiComboBoxItem text="2" />
+            <MultiComboBoxItem text="3" />
+          </MultiComboBox>
+        </FilterGroupItem>
+        <FilterGroupItem label="Num Bath">
+          <MultiComboBox onSelectionChange={handleNumBathChange}>
+            <MultiComboBoxItem text="1" />
+            <MultiComboBoxItem text="1.5" />
+            <MultiComboBoxItem text="2" />
+            <MultiComboBoxItem text="2.5" />
+            <MultiComboBoxItem text="3" />
+          </MultiComboBox>
+        </FilterGroupItem>
+        <FilterGroupItem label="Max Price">
+          <Input onInput={handleMaxPriceChange} />
+        </FilterGroupItem>
+        <FilterGroupItem label="Min Area">
+          <Input onInput={handleMinAreaChange} />
+        </FilterGroupItem>
+      </FilterBar>
       <ApartmentList
-        communities={communitiesToShowDetails}
-        onClose={handleApartmentListClose}
+        availableApartments={availableApartments}
+        loading={loading}
       />
     </ThemeProvider>
   );

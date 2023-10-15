@@ -82,8 +82,8 @@ export function getAvailableApartments(
 ) {
   let filterString = `unitStartingPrice.price<=${maxPrice} AND unitSqFt>=${minArea}`;
   if (communityIds.length) {
-    filterString += ` AND (communityIDAEM=${communityIds.join(
-      " OR communityIDAEM="
+    filterString += ` AND (communityIDAEM:${communityIds.join(
+      " OR communityIDAEM:"
     )})`;
   }
   if (beds.length) {
@@ -133,7 +133,9 @@ export function getCommunityByCities(cities = []) {
         "communityName",
       ],
       // enclose city name in single quotes to avoid issues with spaces
-      filters: `cityName='${cities.join("' OR cityName='")}'`,
+      filters: cities.length
+        ? `cityName:'${cities.join("' OR cityName:'")}'`
+        : "",
     },
   });
 }
