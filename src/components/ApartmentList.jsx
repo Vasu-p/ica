@@ -1,12 +1,15 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import _ from "lodash";
 import moment from "moment";
 import {
   AnalyticalTable,
   AnalyticalTableScaleWidthMode,
   AnalyticalTableVisibleRowCountMode,
+  Icon,
   IllustratedMessage,
+  Link,
 } from "@ui5/webcomponents-react";
+import "@ui5/webcomponents-icons/dist/map";
 
 import { TableHeader } from "../common/TableHeader";
 
@@ -27,11 +30,35 @@ export function ApartmentList({ availableApartments, loading, ...otherProps }) {
 
   const columns = useMemo(() => [
     {
+      id: "cityName",
+      Header: <TableHeader text={"City"} />,
+      accessor: "community.cityName",
+      width: 100,
+    },
+    {
       id: "communityName",
       Header: <TableHeader text={"Community Name"} />,
       accessor: "communityMarketingName",
-      Cell: ({ cell: { value } }) => (
-        <span style={{ textWrap: "balance" }}>{value}</span>
+      Cell: ({
+        cell: {
+          row: { original },
+        },
+      }) => (
+        <>
+          <Link
+            style={{ textWrap: "balance" }}
+            href={original.community.communityExternalUrl}
+            target="_blank"
+          >
+            {original.communityMarketingName}
+          </Link>
+          <Link
+            href={`https://maps.google.com/?q=${original.community.dispCommLocationPt.lat},${original.community.dispCommLocationPt.lng}`}
+            target="_blank"
+          >
+            <Icon name="map" />
+          </Link>
+        </>
       ),
       width: 150,
     },
