@@ -6,6 +6,7 @@ import {
   AnalyticalTableScaleWidthMode,
   AnalyticalTableVisibleRowCountMode,
   IllustratedMessage,
+  Link,
 } from "@ui5/webcomponents-react";
 
 import { TableHeader } from "../common/TableHeader";
@@ -35,9 +36,17 @@ export function ApartmentList({ availableApartments, loading, ...otherProps }) {
     {
       id: "communityName",
       Header: <TableHeader text={"Community Name"} />,
-      accessor: "communityMarketingName",
-      Cell: ({ cell: { value } }) => (
-        <span style={{ textWrap: "balance" }}>{value}</span>
+      Cell: ({
+        cell: {
+          row: { original },
+        },
+      }) => (
+        <Link
+          style={{ textWrap: "balance" }}
+          href={original.community.communityExternalUrl}
+        >
+          {original.communityMarketingName}
+        </Link>
       ),
       width: 150,
     },
