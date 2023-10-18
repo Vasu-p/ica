@@ -27,6 +27,12 @@ export function ApartmentList({ availableApartments, loading, ...otherProps }) {
 
   const columns = useMemo(() => [
     {
+      id: "cityName",
+      Header: <TableHeader text={"City"} />,
+      accessor: "community.cityName",
+      width: 100,
+    },
+    {
       id: "communityName",
       Header: <TableHeader text={"Community Name"} />,
       accessor: "communityMarketingName",

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import {
   FilterBar,
@@ -18,12 +18,12 @@ import "./App.css";
 import { setTheme } from "@ui5/webcomponents-base/dist/config/Theme";
 import "@ui5/webcomponents-react/dist/Assets";
 
-import { CommunityList } from "./components/CommunityList";
 import { ApartmentList } from "./components/ApartmentList";
 import { HelpDialog } from "./components/HelpDialog";
 
 import "@ui5/webcomponents-icons/dist/sys-help";
 import { useAvailableApartments } from "./hooks/useAvailableApartments";
+import { useAllCommunities } from "./hooks/useAllCommunities";
 import { cities } from "./data/cities";
 
 function App() {
@@ -41,6 +41,20 @@ function App() {
     setCities,
     loading,
   } = useAvailableApartments();
+
+  const { allCommunities } = useAllCommunities();
+
+  const availableApartmentsWithCommunity = useMemo(() => {
+    return availableApartments.map((apartment) => {
+      const community = allCommunities.find(
+        (community) => community.objectID === apartment.communityIDAEM
+      );
+      return {
+        ...apartment,
+        community,
+      };
+    });
+  }, [availableApartments, allCommunities]);
 
   const handleCityChange = useCallback(
     (event) => {
@@ -135,7 +149,7 @@ function App() {
           </FilterGroupItem>
         </FilterBar>
         <ApartmentList
-          availableApartments={availableApartments}
+          availableApartments={availableApartmentsWithCommunity}
           loading={loading}
         />
       </FlexBox>
