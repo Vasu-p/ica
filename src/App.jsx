@@ -25,6 +25,7 @@ import "@ui5/webcomponents-icons/dist/sys-help";
 import { useAvailableApartments } from "./hooks/useAvailableApartments";
 import { useAllCommunities } from "./hooks/useAllCommunities";
 import { cities } from "./data/cities";
+import { SupportButton } from "./components/SupportButton";
 
 function App() {
   // change theme to horizon
@@ -153,6 +154,7 @@ function App() {
           loading={loading}
         />
       </FlexBox>
+      <SupportButton />
     </ThemeProvider>
   );
 }
